@@ -1,8 +1,7 @@
 import tweepy
 import mongo_setup
-import tweepy
-import mongo_setup
-
+import quotetweet
+import retweet
 
 class MyStreamListener(tweepy.StreamListener):
     # set up mongodb
@@ -13,14 +12,23 @@ class MyStreamListener(tweepy.StreamListener):
 
         # filter for quote tweets
         if hasattr(status, 'quoted_status'):
-            quote = status.quoted_status
-            if 'user' in quote:
-                if quote['user'] is not None:
-                    if "screen_name" in quote['user']:
-                        if quote['user']['screen_name'] is not None:
-                            print(screen_name + " quote tweeted " + quote['user']['screen_name'])
+            quote_tweet = status.quoted_status
+            if 'user' in quote_tweet:
+                if quote_tweet['user'] is not None:
+                    if "screen_name" in quote_tweet['user']:
+                        if quote_tweet['user']['screen_name'] is not None:
+                            print(screen_name + " quote tweeted " + quote_tweet['user']['screen_name'])
                             print(status.text)
                             print("")
+
+                            # save quote tweet information to mongoDB
+                            quotetweet_instance = quotetweet.QuoteTweet
+
+                            quotetweet_instance.user = screen_name
+                            quotetweet_instance.quotedUser = quote_tweet['user']['screen_name']
+                            quotetweet_instance.tweet = status.text
+
+                            quotetweet_instance.save()
 
         # filter for retweets
         if hasattr(status, 'retweeted_status'):
@@ -32,6 +40,16 @@ class MyStreamListener(tweepy.StreamListener):
                             print(screen_name + " retweeted " + retweet.user.screen_name)
                             print(status.text)
                             print("")
+
+                            # save retweet information to mongoDB
+                            retweet_instance = retweet.Retweets
+
+                            retweet_instance.user = screen_name
+                            retweet_instance.retweetedUser = retweet.user.screen_name
+                            retweet_instance.tweet = status.text
+
+                            retweet_instance.save()
+
 
 # actual crawler
 def crawl(consumer_key, consumer_secret, access_token, access_token_secret):
