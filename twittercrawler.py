@@ -1,10 +1,13 @@
 import json
-from typing import Dict, Any
 import tweepy
 import re
-
+import mongo_setup
+import retweet
+import quotetweet
 
 class MyStreamListener(tweepy.StreamListener):
+
+    mongo_setup.global_init()
 
     def on_status(self, status):
         print(status.text)
