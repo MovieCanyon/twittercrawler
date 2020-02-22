@@ -1,18 +1,39 @@
-import json
 import tweepy
-import re
 import mongo_setup
-import retweet
-import quotetweet
+import tweepy
+import mongo_setup
+
 
 class MyStreamListener(tweepy.StreamListener):
-
+    # set up mongodb
     mongo_setup.global_init()
 
     def on_status(self, status):
-        print(status.text)
+        screen_name = status.user.screen_name
 
+        # filter for quote tweets
+        if hasattr(status, 'quoted_status'):
+            quote = status.quoted_status
+            if 'user' in quote:
+                if quote['user'] is not None:
+                    if "screen_name" in quote['user']:
+                        if quote['user']['screen_name'] is not None:
+                            print(screen_name + " quote tweeted " + quote['user']['screen_name'])
+                            print(status.text)
+                            print("")
 
+        # filter for retweets
+        if hasattr(status, 'retweeted_status'):
+            retweet = status.retweeted_status
+            if hasattr(retweet, 'user'):
+                if retweet.user is not None:
+                    if hasattr(retweet.user, 'screen_name'):
+                        if retweet.user.screen_name is not None:
+                            print(screen_name + " retweeted " + retweet.user.screen_name)
+                            print(status.text)
+                            print("")
+
+# actual crawler
 def crawl(consumer_key, consumer_secret, access_token, access_token_secret):
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
