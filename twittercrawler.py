@@ -1,11 +1,18 @@
 import tweepy
 import mongo_setup
 import quotetweet
-import retweet
+import retweets
+import csv
+
 
 class MyStreamListener(tweepy.StreamListener):
     # set up mongodb
     mongo_setup.global_init()
+
+    # set up CSV file
+    with open('twitterdata.csv', 'a') as file:
+        writer = csv.writer(file)
+        writer.writerow(["user", "retweeted/quoted user", "tweet"])
 
     def on_status(self, status):
         screen_name = status.user.screen_name
@@ -13,11 +20,11 @@ class MyStreamListener(tweepy.StreamListener):
         # filter for quote tweets
         if hasattr(status, 'quoted_status'):
             quote_tweet = status.quoted_status
-            if 'user' in quote_tweet:
-                if quote_tweet['user'] is not None:
-                    if "screen_name" in quote_tweet['user']:
-                        if quote_tweet['user']['screen_name'] is not None:
-                            print(screen_name + " quote tweeted " + quote_tweet['user']['screen_name'])
+            if hasattr(quote_tweet, 'user'):
+                if quote_tweet.user is not None:
+                    if hasattr(quote_tweet.user, screen_name):
+                        if quote_tweet.user.screen_name is not None:
+                            print(screen_name + " quote tweeted " + quote_tweet.user.screen_name)
                             print(status.text)
                             print("")
 
@@ -25,10 +32,13 @@ class MyStreamListener(tweepy.StreamListener):
                             quotetweet_instance = quotetweet.QuoteTweet
 
                             quotetweet_instance.user = screen_name
-                            quotetweet_instance.quotedUser = quote_tweet['user']['screen_name']
+                            quotetweet_instance.quotedUser = quote_tweet.user.screen_name
                             quotetweet_instance.tweet = status.text
 
-                            quotetweet_instance.save()
+                            # save quote tweet information to CSV file
+                            with open('twitterdata.csv', 'a') as file:
+                                writer = csv.writer(file)
+                                writer.writerow([screen_name, quote_tweet.user.screen_name, status.text])
 
         # filter for retweets
         if hasattr(status, 'retweeted_status'):
@@ -42,13 +52,15 @@ class MyStreamListener(tweepy.StreamListener):
                             print("")
 
                             # save retweet information to mongoDB
-                            retweet_instance = retweet.Retweets
-
+                            retweet_instance = retweets.Retweets
                             retweet_instance.user = screen_name
                             retweet_instance.retweetedUser = retweet.user.screen_name
                             retweet_instance.tweet = status.text
 
-                            retweet_instance.save()
+                            # save retweet information to CSV file
+                            with open('twitterdata.csv', 'a') as file:
+                                writer = csv.writer(file)
+                                writer.writerow([screen_name, retweet.user.screen_name , status.text])
 
 
 # actual crawler
@@ -61,7 +73,7 @@ def crawl(consumer_key, consumer_secret, access_token, access_token_secret):
     myStreamListener = MyStreamListener()
     myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
 
-    myStream.filter(track=['python'])
+    myStream.filter(languages=["en"], track=['python', 'coronavirus', 'movies'])
 
 
 consumer_key = 'hcJP7YDPGEF6Amsz4vqeVKs3y'
