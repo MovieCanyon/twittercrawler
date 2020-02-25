@@ -3,9 +3,14 @@ import mongo_setup
 import quotetweet
 import retweets
 import csv
+import extract_keywords, extract_hashtags
+
+# list of hashtags to looks for it tweets
+hashtags = ['#happy', '#sad', '#excited', '#angry', '#disgusted', '#surprised']
 
 
 class MyStreamListener(tweepy.StreamListener):
+
     # set up mongodb
     mongo_setup.global_init()
 
@@ -16,6 +21,19 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         screen_name = status.user.screen_name
+
+        # group each individual keyword in a separate csv file
+        if "cornoavirus" in status.text:
+            extract_keywords.extract_cornonavirus(status.text, screen_name)
+        elif "python" in status.text:
+            extract_keywords.extract_python(status.text, screen_name)
+        elif "movies" in status.text:
+            extract_keywords.extract_movies(status.text, screen_name)
+
+        # group tweets with the specific hashtags we're looking for in a separate csv file
+        for hashtag in hashtags:
+            if hashtag in status.text:
+                extract_hashtags.extract_hashtag_information(status.text, screen_name)
 
         # filter for quote tweets
         if hasattr(status, 'quoted_status'):
@@ -60,7 +78,7 @@ class MyStreamListener(tweepy.StreamListener):
                             # save retweet information to CSV file
                             with open('twitterdata.csv', 'a') as file:
                                 writer = csv.writer(file)
-                                writer.writerow([screen_name, retweet.user.screen_name , status.text])
+                                writer.writerow([screen_name, retweet.user.screen_name, status.text])
 
 
 # actual crawler
@@ -73,9 +91,11 @@ def crawl(consumer_key, consumer_secret, access_token, access_token_secret):
     myStreamListener = MyStreamListener()
     myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
 
+    # filter for tweets in english, track words 'python', 'coronavirus' and 'movies'
     myStream.filter(languages=["en"], track=['python', 'coronavirus', 'movies'])
 
 
+# keys
 consumer_key = 'hcJP7YDPGEF6Amsz4vqeVKs3y'
 consumer_secret = '46p4RYkLzF2uPBx3Isvw2VAmu2FbfsxBLFvoZYFJIk0Bmu7X3h'
 access_token = '2769456760-NLbQDpwwGYzWODWfAYniQY3kQqeNhlJw55hL3Ao'
