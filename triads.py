@@ -1,8 +1,8 @@
 import csv
 
-# pass in dictionary from capture_users.py
-# For each user mentioned, go through their mentions
-# Print to console
+# Pass in dictionary from capture_users.py
+# For each user, go through their mentions
+# Print triad to console
 
 # Example: If A mentions B, and B mentions C, then print:
 

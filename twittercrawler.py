@@ -5,7 +5,7 @@ import csv
 # set up CSV file
 with open('twitterdata.csv', 'a') as file:
     writer = csv.writer(file)
-    writer.writerow(["tweet"])
+    writer.writerow(["username", "tweet"])
 
 # keys
 consumer_key = 'hcJP7YDPGEF6Amsz4vqeVKs3y'

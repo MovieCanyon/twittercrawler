@@ -7,13 +7,16 @@ class MyStreamListener(tweepy.StreamListener):
     # set up mongodb
     # mongo_setup.global_init()
 
-    def on_status(self, status):
-        print(status.text)
+    def on_status(self, tweet):
+        print(tweet.text)
 
         # save tweet information to CSV file
         with open('twitterdata.csv', 'a') as file:
             writer = csv.writer(file)
-            writer.writerow([status.text])
+            if tweet.is_quote_status:
+                writer.writerow([tweet.user.screen_name, "QT " + tweet.text])
+            else:
+                writer.writerow([tweet.user.screen_name, tweet.text])
 
 
 # actual crawler

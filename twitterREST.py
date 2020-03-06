@@ -33,7 +33,11 @@ def crawl(consumer_key, consumer_secret, access_token, access_token_secret):
                     print("NO NEW TWEETS")
                     break
                 for tweet in tweets:
-                    writer.writerow([tweet.text])
+                    if tweet.is_quote_status:
+                        writer.writerow([tweet.user.screen_name, "QT " + tweet.text])
+                    else:
+                        writer.writerow([tweet.user.screen_name, tweet.text])
+
                     tweetCount += len(tweets)
                     max_id = tweets[-1].id
             except tweepy.TweepError as e:

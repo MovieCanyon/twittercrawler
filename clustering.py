@@ -5,13 +5,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # open test data from csv file into array
 data = []
 with open('twitterdata.csv', 'r') as f:
-    reader = csv.reader(f, delimiter="\t")
-    for i, line in enumerate(reader):
-        line = line[0]
-        data.append(line)
+    reader = csv.reader(f)
+    for line in reader:
+        if line[1].split(" ")[0] != "RT":
+            if line[1].split(" ")[0] == "QT":
+                data.append(line[1][6:])
+            else:
+                data.append(line[1])
 
 # perform clustering on the text
-
 vectoriser = TfidfVectorizer(stop_words='english')
 X = vectoriser.fit_transform(data)
 k = 10
