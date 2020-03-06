@@ -1,6 +1,6 @@
 import csv
 
-# pass in dictionary from captureUsers.py
+# pass in dictionary from capture_users.py
 # For each user mentioned, go through their mentions
 # Print to console
 
