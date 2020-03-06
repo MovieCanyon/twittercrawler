@@ -15,13 +15,11 @@ def crawl(consumer_key, consumer_secret, access_token, access_token_secret):
     hashtagSearch = '#coronavirus'
     maxTweets = 9000
     noOfTweets = 100
-    file = 'twitterdata.csv'
-
     sinceId = None
     max_id = -1
     tweetCount = 0
 
-    with open(file, 'a') as f:
+    with open('twitterdata.csv', 'a') as f:
         writer = csv.writer(f)
         while tweetCount < maxTweets:
             try:

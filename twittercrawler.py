@@ -14,6 +14,6 @@ access_token = '2769456760-NLbQDpwwGYzWODWfAYniQY3kQqeNhlJw55hL3Ao'
 access_token_secret = 'deiSH41U53vUgeKiEjOKPcGxDUqMm1GUEwlYYkwkLyzw7'
 
 twitterREST.crawl(consumer_key, consumer_secret, access_token, access_token_secret)
-#twitterSTREAM.crawl(consumer_key, consumer_secret, access_token, access_token_secret)
+twitterSTREAM.crawl(consumer_key, consumer_secret, access_token, access_token_secret)
 
 
