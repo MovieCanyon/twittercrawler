@@ -52,26 +52,23 @@ with open('twitterdata.csv', 'r') as f:
                     else:
                         user_dict_quote[line[0]][text] = 1
 
-print("")
-print("General Tweet Network:")
-print("")
-print(user_dict)
-print("_____________________________________")
-print("")
-print("Retweet Network:")
-print("")
-print(user_dict_retweet)
-print("_____________________________________")
-print("")
-print("Quote Tweet Network:")
-print("")
-print(user_dict_quote)
+
+def print_general_network():
+    print("")
+    print("General Tweet Network:")
+    print("")
+    print(user_dict)
 
 
+def print_retweet_network():
+    print("")
+    print("Retweet Network:")
+    print("")
+    print(user_dict_retweet)
 
 
-
-
-
-
-
+def print_quote_network():
+    print("")
+    print("Quote Tweet Network:")
+    print("")
+    print(user_dict_quote)
