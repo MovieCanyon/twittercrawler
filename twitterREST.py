@@ -5,8 +5,8 @@ import tweepy
 # actual crawler
 def crawl(consumer_key, consumer_secret, access_token, access_token_secret):
 
-    print("WE HAVE BEGUN!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WE HAVE BEGUN!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("")
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
 
