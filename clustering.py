@@ -29,5 +29,3 @@ for i in range(k):
     for ind in order_centroids[i, :10]:
         print(' %s' % terms[ind])
     print("")
-
-
