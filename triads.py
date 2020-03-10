@@ -24,14 +24,17 @@ print("")
 for user in user_dict:
     for mentioned_user in user_dict[user]:
         mentioned_user = mentioned_user[1:]
-        if mentioned_user in user_dict:
+        if mentioned_user in user_dict and mentioned_user != user:
             for third_user in user_dict[mentioned_user]:
-                print("Triad ", triad_number)
-                print(user + '->' + mentioned_user + '; ' + mentioned_user + '->' + third_user)
-                print(user + '->' + mentioned_user + '; ' + mentioned_user + '->' + third_user + '; ' + third_user + '->' + user)
-                print(user + '<->' + mentioned_user + '; ' + mentioned_user + '->' + third_user + '; ' + third_user + '->' + user)
-                print(user + '<->' + mentioned_user + '; ' + mentioned_user + '<->' + third_user + '; ' + third_user + '->' + user)
-                print(user + '->' + mentioned_user + '; ' + mentioned_user + '<->' + third_user + '; ' + third_user + '<->' + user)
-                print(user + '->' + mentioned_user + '; ' + mentioned_user + '<->' + third_user + '; ')
-                print("")
-                triad_number += 1
+                if third_user[-1:] == ":":
+                    third_user = third_user[:-1]
+                if third_user[1:] != mentioned_user:
+                    print("Triad ", triad_number)
+                    print(user + '->' + mentioned_user + '; ' + mentioned_user + '->' + third_user)
+                    print(user + '->' + mentioned_user + '; ' + mentioned_user + '->' + third_user + '; ' + third_user + '->' + user)
+                    print(user + '<->' + mentioned_user + '; ' + mentioned_user + '->' + third_user + '; ' + third_user + '->' + user)
+                    print(user + '<->' + mentioned_user + '; ' + mentioned_user + '<->' + third_user + '; ' + third_user + '->' + user)
+                    print(user + '->' + mentioned_user + '; ' + mentioned_user + '<->' + third_user + '; ' + third_user + '<->' + user)
+                    print(user + '->' + mentioned_user + '; ' + mentioned_user + '<->' + third_user + '; ')
+                    print("")
+                    triad_number += 1
